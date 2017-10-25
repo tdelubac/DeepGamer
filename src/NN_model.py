@@ -6,10 +6,10 @@ def MLP(input_size, label_size):
 
     NN = input_data(shape=[None, input_size], name='input')
     
-    NN = fully_connected(NN, 256, activation='relu')
+    NN = fully_connected(NN, 128, activation='relu')
     NN = dropout(NN,0.8)
 
-    NN = fully_connected(NN, 128, activation='relu')
+    NN = fully_connected(NN, 64, activation='relu')
     NN = dropout(NN,0.8)
 
     NN = fully_connected(NN, 32, activation='relu')
