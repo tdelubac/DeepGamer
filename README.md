@@ -6,13 +6,13 @@ It is based on the version of the algorithm described by <a href=http://neuro.cs
 ## Requirements
 
 You will need TensorFlow, tflearn and gym to run the code. To install them go in the DeepGamer directory and type in a terminal:
-'''
+```
 pip install -r requirements.txt
-'''
+```
 
 ## Running the code
 
 To run the code go in the DeepGamer directory and type in a terminal:
-'''
+```
 python src/main.py
-'''
+```
