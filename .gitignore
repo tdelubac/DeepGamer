@@ -1,3 +1,7 @@
 models/*
 src/log/*
 src/__pycache__
+env_DeepGamer/*
+log/*
+*.pyc
+*.DS_Store
