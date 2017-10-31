@@ -5,6 +5,7 @@ import collections
 def observeGame(model, env, epsilon=1, render=False):
      # Initialise environment and render
     state = env.reset()
+    state = state.reshape(-1)
     score = 0
     memory = collections.deque()
     done = False
@@ -20,6 +21,7 @@ def observeGame(model, env, epsilon=1, render=False):
             action = np.argmax(model.predict( np.expand_dims(state, axis=0) ))
         # Carry action and save <s,a,r,s'>
         new_state, reward, done, info = env.step(action)
+        new_state = new_state.reshape(-1)
         memory.append([state,action,reward,new_state,done])
         score += reward
         state = new_state
