@@ -1,31 +1,63 @@
 import numpy as np
 import random
 import collections
+import time
+
+def convertToGreyScale(state):
+    '''
+    Convert RGB image to grey scale
+    '''
+    conversion = [0.299, 0.587, 0.114]
+    grey_state = np.dot(state,conversion)
+    return grey_state
 
 def observeGame(model, env, epsilon=1, render=False):
-     # Initialise environment and render
-    state = env.reset()
+    # Initialise environment and render
+    # begin_obs = time.time()
+    state = convertToGreyScale(env.reset())
     state = state.reshape(-1)
+    # delta_time = time.time() - begin_obs
+    # print("Create state:",delta_time)
     score = 0
     memory = collections.deque()
     done = False
+
     while not done:
+        # time_now = time.time()
         if render:
             env.render()
+        # delta_time = time.time() - time_now
+        # print("Render state:", delta_time)
+       
         # Pick action allowing random action 
         # to allow the model to learn new moves
+        # time_now = time.time()
+
         random_number = random.uniform(0,1)
         if random_number < epsilon:
-            action = random.choice(range(env.action_space.n))
+            action = random.choice(range(env.action_space.n-1))
         else:
             action = np.argmax(model.predict( np.expand_dims(state, axis=0) ))
+        
+        # delta_time = time.time() - time_now
+        # print("Pick action:", delta_time)
+        # time_now = time.time()
+
         # Carry action and save <s,a,r,s'>
-        new_state, reward, done, info = env.step(action)
+        new_state, reward, done, info = env.step(action+1) # +1 to avoid "no action"
+        new_state = convertToGreyScale(new_state)
         new_state = new_state.reshape(-1)
+        
+        # delta_time = time.time() - time_now
+        # print("Get new state:", delta_time)
+        # time_now = time.time()
+
         memory.append([state,action,reward,new_state,done])
         score += reward
         state = new_state
-
+        
+        # delta_time = time.time() - time_now
+        # print("Save in memory:",delta_time)
     return memory, score
 
 

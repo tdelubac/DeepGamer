@@ -1,26 +1,41 @@
-import tflearn 
-from tflearn.layers.core import input_data, dropout, fully_connected
-from tflearn.layers.estimator import regression
+from keras.models import Sequential
+from keras.layers.core import Dense, Dropout, Activation, Flatten
+from keras.layers.convolutional import Conv2D, MaxPooling2D
+from keras.optimizers import SGD , Adam, RMSprop
 
-def MLP(input_size, label_size):
+def Mnih15(input_shape,label_size):
+    model = Sequential()
+    model.add(Conv2D(32, (8, 8), input_shape=input_shape, strides=(4, 4), padding="same"))
+    model.add(Activation('relu'))
+    model.add(Conv2D(64, (4, 4), strides=(2, 2), padding='same'))
+    model.add(Activation('relu'))
+    model.add(Conv2D(64, (3, 3), strides=(1, 1), padding='same'))
+    model.add(Activation('relu'))
+    model.add(Flatten())
+    model.add(Dense(512))
+    model.add(Activation('relu'))
+    model.add(Dense(label_size))
+    # model.add(Activation('softmax'))
 
-    NN = input_data(shape=[None, input_size], name='input')
-    
-    NN = fully_connected(NN, 512, activation='relu')
-    NN = dropout(NN,0.8)
-
-    NN = fully_connected(NN, 512, activation='relu')
-    NN = dropout(NN,0.8)
-
-    NN = fully_connected(NN, 64, activation='relu')
-    NN = dropout(NN,0.8)
-
-    NN = fully_connected(NN, label_size, activation='softmax')
-    NN = regression(NN, optimizer='adam', learning_rate=1e-3, loss='mean_square', name='targets')
-
-    model = tflearn.DNN(NN, tensorboard_dir='log')
-
+    # adam = Adam(lr=0.00025)
+    rmsprop = RMSprop(lr=0.00025)
+    model.compile(loss='mse',optimizer=rmsprop)
     return model
 
-    
 
+def MLP(input_shape,label_size):
+    model = Sequential()
+    model.add(Dense(512, input_shape=input_shape))
+    model.add(Activation('relu'))
+    model.add(Dense(512))
+    model.add(Activation('relu'))
+    model.add(Dense(256))
+    model.add(Activation('relu'))
+    model.add(Flatten())
+    model.add(Dense(label_size))
+    # model.add(Activation('softmax'))
+
+    # adam = Adam(lr=0.00025)
+    rmsprop = RMSprop(lr=0.00025)
+    model.compile(loss='mse',optimizer=rmsprop)
+    return model
